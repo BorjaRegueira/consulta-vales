@@ -64,7 +64,7 @@ st.markdown("""
 
 st.markdown('<div class="card">', unsafe_allow_html=True)
 
-st.image("/mnt/data/Logo MANTOTAL Facility.png", use_column_width=True, output_format='PNG')
+st.image("Logo MANTOTAL Facility.png", use_column_width=True)
 st.title("Consulta de Vales de Pedido")
 st.write("Introduce el código del vale (ej: GA1200, PV 1350, CYL1500)")
 
