@@ -34,22 +34,16 @@ def buscar_vale(df, codigo):
 # Estilos personalizados
 st.markdown("""
     <style>
-    body {
+    body, .main, .stApp {
         background-color: #ffa53a;
-        color: black;
     }
-    .main, .stApp {
-        background-color: #ffa53a;
-        color: black;
-    }
-    .white-card {
+    .custom-container {
         background-color: white;
         padding: 2em;
         border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         max-width: 600px;
         margin: 3em auto;
-        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     .stTextInput > div > div > input {
         background-color: white;
@@ -69,24 +63,21 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Comienzo de la tarjeta blanca
-st.markdown('<div class="white-card">', unsafe_allow_html=True)
+with st.container():
+    st.markdown('<div class="custom-container">', unsafe_allow_html=True)
 
-# Logo y título
-st.image("Logo MANTOTAL Facility.png", use_container_width=True)
-st.markdown("## Consulta de Vales de Pedido")
-st.markdown("<p style='margin-bottom: 1em;'>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
+    st.image("Logo MANTOTAL Facility.png", use_container_width=True)
+    st.markdown("## Consulta de Vales de Pedido")
+    st.markdown("<p style='margin-bottom: 1em;'>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
-# Entrada de código y resultado
-codigo_vale = st.text_input("Código del Vale:")
-df_vales = cargar_datos()
+    codigo_vale = st.text_input("Código del Vale:")
+    df_vales = cargar_datos()
 
-if codigo_vale:
-    resultado = buscar_vale(df_vales, codigo_vale)
-    if resultado:
-        st.success(f"El vale {codigo_vale.upper()} está asignado a: {resultado}")
-    else:
-        st.error("Este vale no está registrado en la base de datos.")
+    if codigo_vale:
+        resultado = buscar_vale(df_vales, codigo_vale)
+        if resultado:
+            st.success(f"El vale {codigo_vale.upper()} está asignado a: {resultado}")
+        else:
+            st.error("Este vale no está registrado en la base de datos.")
 
-# Fin de la tarjeta blanca
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
