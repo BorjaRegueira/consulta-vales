@@ -12,27 +12,19 @@ def cargar_datos():
     xls = pd.ExcelFile(file)
     df = xls.parse("NOV18 - VALES DE PEDIDO ", dtype=str)
 
-    # Buscar encabezado
+    # Buscar la fila de encabezados por nombre de columna
     header_row_idx = df[df.iloc[:, 2] == 'ZONA'].index[0] + 1
     df = df.iloc[header_row_idx:, :]
     df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones'] + list(df.columns[6:])
-    df = df[['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones']]
 
-    # Limpiar entradas no válidas
-    df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
-
-    # Eliminar filas con valores no numéricos en Inicio o Fin
-    df = df[df['Inicio'].str.extract(r'(\\d+)')[0].notna()]
-    df = df[df['Fin'].str.extract(r'(\\d+)')[0].notna()]
-
-    # Convertir a enteros
-    df['Inicio'] = df['Inicio'].str.extract(r'(\\d+)')[0].astype(int)
-    df['Fin'] = df['Fin'].str.extract(r'(\\d+)')[0].astype(int)
-
+    df = df[['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones']].dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
+    df['Inicio'] = df['Inicio'].astype(int)
+    df['Fin'] = df['Fin'].astype(int)
     return df
 
+# Función para buscar vale
 def buscar_vale(df, codigo):
-    match = re.match(r"([A-Z]{2,4})(\\d+)", codigo.strip().upper())
+    match = re.match(r"([A-Z]{2,4})(\d+)", codigo.strip().upper())
     if not match:
         return None, None
     zona = match.group(1)
@@ -46,7 +38,7 @@ def buscar_vale(df, codigo):
 
 # Interfaz
 st.title("Consulta de Vales de Pedido")
-st.write("Introduce el código del vale (ej: GA1200, PV1350, CYL1500)")
+st.write("Introduce el código del vale (ej: GA1200, PV 1350, CYL1500)")
 
 codigo_vale = st.text_input("Código del Vale:")
 
