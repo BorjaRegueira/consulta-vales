@@ -36,37 +36,38 @@ st.markdown("""
     <style>
     body {
         background-color: #ffa53a;
+        color: black;
     }
-    .main {
+    .main, .stApp {
         background-color: #ffa53a;
+        color: black;
     }
-    .stApp {
-        background-color: #ffa53a;
-    }
-    .card {
+    .white-card {
         background-color: white;
         padding: 2em;
-        border-radius: 15px;
+        border-radius: 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        margin: auto;
-        width: 100%;
-        max-width: 500px;
+        max-width: 600px;
+        margin: 2em auto;
+        text-align: center;
     }
-    .logo {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 60%;
-        margin-bottom: 2em;
+    .stTextInput > div > div > input {
+        background-color: white;
+        border: 2px solid black;
+        color: black;
+    }
+    .stAlert.success {
+        border: 2px solid green;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="card">', unsafe_allow_html=True)
+st.markdown('<div class="white-card">', unsafe_allow_html=True)
 
-st.image("Logo MANTOTAL Facility.png", use_column_width=True)
-st.title("Consulta de Vales de Pedido")
-st.write("Introduce el código del vale (ej: GA1200, PV 1350, CYL1500)")
+st.image("Logo MANTOTAL Facility.png", use_container_width=True)
+
+st.markdown("## Consulta de Vales de Pedido")
+st.markdown("<p style='margin-bottom: 1em;'>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
 codigo_vale = st.text_input("Código del Vale:")
 df_vales = cargar_datos()
