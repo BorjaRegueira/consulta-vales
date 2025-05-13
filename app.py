@@ -22,15 +22,15 @@ def cargar_datos():
     df['Fin'] = df['Fin'].astype(str)
 
     # Extraer y limpiar los números
-    df = df[df['Inicio'].str.extract(r'(\\d+)')[0].notna()]
-    df = df[df['Fin'].str.extract(r'(\\d+)')[0].notna()]
-    df['Inicio'] = df['Inicio'].str.extract(r'(\\d+)')[0].astype(int)
-    df['Fin'] = df['Fin'].str.extract(r'(\\d+)')[0].astype(int)
+    df = df[df['Inicio'].str.extract(r'(\d+)')[0].notna()]
+    df = df[df['Fin'].str.extract(r'(\d+)')[0].notna()]
+    df['Inicio'] = df['Inicio'].str.extract(r'(\d+)')[0].astype(int)
+    df['Fin'] = df['Fin'].str.extract(r'(\d+)')[0].astype(int)
 
     return df
 
 def buscar_vale(df, codigo):
-    match = re.match(r"([A-Z]{2,4})(\\d+)", codigo.strip().upper())
+    match = re.match(r"([A-Z]{2,4})(\d+)", codigo.strip().upper())
     if not match:
         return None
     zona = match.group(1)
