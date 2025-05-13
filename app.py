@@ -12,20 +12,24 @@ def cargar_datos():
     xls = pd.ExcelFile(file)
     df = xls.parse("NOV18 - VALES DE PEDIDO ", dtype=str)
 
-    # Buscar la fila con encabezados y ajustarse dinámicamente
+    # Detectar encabezado dinámico
     header_row_idx = df[df.iloc[:, 2] == 'ZONA'].index[0] + 1
     df = df.iloc[header_row_idx:, :]
     df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones'] + list(df.columns[6:])
     
     df = df[['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones']]
     df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
+
+    # Limpiar y filtrar entradas no numéricas
+    df = df[df['Inicio'].str.match(r'^\\d+$')]
+    df = df[df['Fin'].str.match(r'^\\d+$')]
     df['Inicio'] = df['Inicio'].astype(int)
     df['Fin'] = df['Fin'].astype(int)
     return df
 
 # Función para buscar vale
 def buscar_vale(df, codigo):
-    match = re.match(r"([A-Z]{2,4})(\d+)", codigo.strip().upper())
+    match = re.match(r"([A-Z]{2,4})(\\d+)", codigo.strip().upper())
     if not match:
         return None, None
     zona = match.group(1)
