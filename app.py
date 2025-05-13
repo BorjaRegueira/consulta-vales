@@ -7,13 +7,17 @@ import requests
 dropbox_url = "https://www.dropbox.com/scl/fi/1krqq19pflt9enigikm9n/Vales-de-pedido.xlsx?rlkey=qqx033a1jnaenah607oc21ace&raw=1"
 
 @st.cache_data
-
 def cargar_datos():
     file = requests.get(dropbox_url).content
     xls = pd.ExcelFile(file)
-    df = xls.parse("NOV18 - VALES DE PEDIDO ")
-    df = df.iloc[3:, [1, 2, 3, 4, 5]]
-    df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial']
+    df = xls.parse("NOV18 - VALES DE PEDIDO ", dtype=str)
+
+    # Buscar la fila con encabezados y ajustarse dinámicamente
+    header_row_idx = df[df.iloc[:, 2] == 'ZONA'].index[0] + 1
+    df = df.iloc[header_row_idx:, :]
+    df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones'] + list(df.columns[6:])
+    
+    df = df[['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones']]
     df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
     df['Inicio'] = df['Inicio'].astype(int)
     df['Fin'] = df['Fin'].astype(int)
@@ -23,13 +27,17 @@ def cargar_datos():
 def buscar_vale(df, codigo):
     match = re.match(r"([A-Z]{2,4})(\d+)", codigo.strip().upper())
     if not match:
-        return None
+        return None, None
     zona = match.group(1)
     numero = int(match.group(2))
     resultado = df[(df['Zona'] == zona) & (df['Inicio'] <= numero) & (df['Fin'] >= numero)]
-    return resultado.iloc[0]['Oficial'] if not resultado.empty else None
+    if not resultado.empty:
+        oficial = resultado.iloc[0]['Oficial']
+        observaciones = resultado.iloc[0]['Observaciones'] if pd.notna(resultado.iloc[0]['Observaciones']) else None
+        return oficial, observaciones
+    return None, None
 
-# Interfaz
+# Interfaz de la app
 st.title("Consulta de Vales de Pedido")
 st.write("Introduce el código del vale (ej: GA1200, PV 1350, CYL1500)")
 
@@ -38,8 +46,10 @@ codigo_vale = st.text_input("Código del Vale:")
 df_vales = cargar_datos()
 
 if codigo_vale:
-    resultado = buscar_vale(df_vales, codigo_vale)
-    if resultado:
-        st.success(f"El vale {codigo_vale.upper()} está asignado a: {resultado}")
+    oficial, observaciones = buscar_vale(df_vales, codigo_vale)
+    if oficial:
+        st.success(f"El vale {codigo_vale.upper()} está asignado a: {oficial}")
+        if observaciones:
+            st.error(f"Observaciones: {observaciones}")
     else:
         st.error("Este vale no está registrado en la base de datos.")
