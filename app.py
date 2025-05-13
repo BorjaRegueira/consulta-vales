@@ -11,22 +11,15 @@ def cargar_datos():
     file = requests.get(dropbox_url).content
     xls = pd.ExcelFile(file)
     df = xls.parse("NOV18 - VALES DE PEDIDO ")
-
-    # Cargar desde fila 4 en adelante (índice 3)
     df = df.iloc[3:, [1, 2, 3, 4, 5]]
     df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial']
     df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
-
-    # Convertir a texto antes de limpiar
     df['Inicio'] = df['Inicio'].astype(str)
     df['Fin'] = df['Fin'].astype(str)
-
-    # Extraer y limpiar los números
     df = df[df['Inicio'].str.extract(r'(\d+)')[0].notna()]
     df = df[df['Fin'].str.extract(r'(\d+)')[0].notna()]
     df['Inicio'] = df['Inicio'].str.extract(r'(\d+)')[0].astype(int)
     df['Fin'] = df['Fin'].str.extract(r'(\d+)')[0].astype(int)
-
     return df
 
 def buscar_vale(df, codigo):
@@ -38,6 +31,40 @@ def buscar_vale(df, codigo):
     resultado = df[(df['Zona'] == zona) & (df['Inicio'] <= numero) & (df['Fin'] >= numero)]
     return resultado.iloc[0]['Oficial'] if not resultado.empty else None
 
+# Estilos personalizados
+st.markdown("""
+    <style>
+    body {
+        background-color: #ffa53a;
+    }
+    .main {
+        background-color: #ffa53a;
+    }
+    .stApp {
+        background-color: #ffa53a;
+    }
+    .card {
+        background-color: white;
+        padding: 2em;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        margin: auto;
+        width: 100%;
+        max-width: 500px;
+    }
+    .logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 60%;
+        margin-bottom: 2em;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="card">', unsafe_allow_html=True)
+
+st.image("/mnt/data/Logo MANTOTAL Facility.png", use_column_width=True, output_format='PNG')
 st.title("Consulta de Vales de Pedido")
 st.write("Introduce el código del vale (ej: GA1200, PV 1350, CYL1500)")
 
@@ -50,3 +77,5 @@ if codigo_vale:
         st.success(f"El vale {codigo_vale.upper()} está asignado a: {resultado}")
     else:
         st.error("Este vale no está registrado en la base de datos.")
+
+st.markdown('</div>', unsafe_allow_html=True)
