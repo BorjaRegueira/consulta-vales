@@ -48,7 +48,7 @@ st.markdown("""
         border-radius: 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         max-width: 600px;
-        margin: 2em auto;
+        margin: 3em auto;
         text-align: center;
     }
     .stTextInput > div > div > input {
@@ -59,16 +59,25 @@ st.markdown("""
     .stAlert.success {
         border: 2px solid green;
     }
+    button[kind="primary"] {
+        background-color: #d86706 !important;
+        color: white !important;
+        border-radius: 8px;
+        font-weight: bold;
+        border: none;
+    }
     </style>
 """, unsafe_allow_html=True)
 
+# Comienzo de la tarjeta blanca
 st.markdown('<div class="white-card">', unsafe_allow_html=True)
 
+# Logo y título
 st.image("Logo MANTOTAL Facility.png", use_container_width=True)
-
 st.markdown("## Consulta de Vales de Pedido")
 st.markdown("<p style='margin-bottom: 1em;'>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
+# Entrada de código y resultado
 codigo_vale = st.text_input("Código del Vale:")
 df_vales = cargar_datos()
 
@@ -79,4 +88,5 @@ if codigo_vale:
     else:
         st.error("Este vale no está registrado en la base de datos.")
 
+# Fin de la tarjeta blanca
 st.markdown('</div>', unsafe_allow_html=True)
