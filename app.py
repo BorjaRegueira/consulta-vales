@@ -12,7 +12,7 @@ def cargar_datos():
     xls = pd.ExcelFile(file)
     df = xls.parse("NOV18 - VALES DE PEDIDO ", dtype=str)
 
-    # Detectar encabezado dinámico
+    # Detectar fila de encabezados y reorganizar
     header_row_idx = df[df.iloc[:, 2] == 'ZONA'].index[0] + 1
     df = df.iloc[header_row_idx:, :]
     df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones'] + list(df.columns[6:])
@@ -20,11 +20,11 @@ def cargar_datos():
     df = df[['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial', 'Observaciones']]
     df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
 
-    # Limpiar y filtrar entradas no numéricas
-    df = df[df['Inicio'].str.match(r'^\\d+$')]
-    df = df[df['Fin'].str.match(r'^\\d+$')]
-    df['Inicio'] = df['Inicio'].astype(int)
-    df['Fin'] = df['Fin'].astype(int)
+    # Limpiar campos numéricos: eliminar texto, espacios, etc.
+    df['Inicio'] = df['Inicio'].str.extract(r'(\\d+)').astype(float).astype('Int64')
+    df['Fin'] = df['Fin'].str.extract(r'(\\d+)').astype(float).astype('Int64')
+
+    df = df.dropna(subset=['Inicio', 'Fin'])
     return df
 
 # Función para buscar vale
