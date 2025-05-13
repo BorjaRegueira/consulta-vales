@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import requests
 
+# URL del archivo Excel en Dropbox
 dropbox_url = "https://www.dropbox.com/scl/fi/1krqq19pflt9enigikm9n/Vales-de-pedido.xlsx?rlkey=qqx033a1jnaenah607oc21ace&raw=1"
 
 @st.cache_data
@@ -10,11 +11,17 @@ def cargar_datos():
     file = requests.get(dropbox_url).content
     xls = pd.ExcelFile(file)
     df = xls.parse("NOV18 - VALES DE PEDIDO ")
+
+    # Cargar desde fila 4 en adelante (índice 3)
     df = df.iloc[3:, [1, 2, 3, 4, 5]]
     df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial']
     df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
 
-    # Limpieza robusta de columnas numéricas
+    # Convertir a texto antes de limpiar
+    df['Inicio'] = df['Inicio'].astype(str)
+    df['Fin'] = df['Fin'].astype(str)
+
+    # Extraer y limpiar los números
     df = df[df['Inicio'].str.extract(r'(\\d+)')[0].notna()]
     df = df[df['Fin'].str.extract(r'(\\d+)')[0].notna()]
     df['Inicio'] = df['Inicio'].str.extract(r'(\\d+)')[0].astype(int)
