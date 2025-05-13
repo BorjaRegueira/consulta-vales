@@ -3,11 +3,9 @@ import pandas as pd
 import re
 import requests
 
-# URL del archivo Excel en Dropbox
 dropbox_url = "https://www.dropbox.com/scl/fi/1krqq19pflt9enigikm9n/Vales-de-pedido.xlsx?rlkey=qqx033a1jnaenah607oc21ace&raw=1"
 
 @st.cache_data
-
 def cargar_datos():
     file = requests.get(dropbox_url).content
     xls = pd.ExcelFile(file)
@@ -15,13 +13,17 @@ def cargar_datos():
     df = df.iloc[3:, [1, 2, 3, 4, 5]]
     df.columns = ['Fecha', 'Zona', 'Inicio', 'Fin', 'Oficial']
     df = df.dropna(subset=['Zona', 'Inicio', 'Fin', 'Oficial'])
-    df['Inicio'] = df['Inicio'].astype(int)
-    df['Fin'] = df['Fin'].astype(int)
+
+    # Limpieza robusta de columnas numéricas
+    df = df[df['Inicio'].str.extract(r'(\\d+)')[0].notna()]
+    df = df[df['Fin'].str.extract(r'(\\d+)')[0].notna()]
+    df['Inicio'] = df['Inicio'].str.extract(r'(\\d+)')[0].astype(int)
+    df['Fin'] = df['Fin'].str.extract(r'(\\d+)')[0].astype(int)
+
     return df
 
-# Función para buscar vale
 def buscar_vale(df, codigo):
-    match = re.match(r"([A-Z]{2,4})(\d+)", codigo.strip().upper())
+    match = re.match(r"([A-Z]{2,4})(\\d+)", codigo.strip().upper())
     if not match:
         return None
     zona = match.group(1)
@@ -29,12 +31,10 @@ def buscar_vale(df, codigo):
     resultado = df[(df['Zona'] == zona) & (df['Inicio'] <= numero) & (df['Fin'] >= numero)]
     return resultado.iloc[0]['Oficial'] if not resultado.empty else None
 
-# Interfaz
 st.title("Consulta de Vales de Pedido")
 st.write("Introduce el código del vale (ej: GA1200, PV 1350, CYL1500)")
 
 codigo_vale = st.text_input("Código del Vale:")
-
 df_vales = cargar_datos()
 
 if codigo_vale:
