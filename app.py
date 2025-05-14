@@ -44,6 +44,11 @@ st.markdown("""
         border: 2px solid black;
         color: black;
     }
+    .stTextInput > div > div > input:focus {
+        border-color: #f7941d;
+        outline: none;
+        box-shadow: 0 0 0 0.1rem rgba(247, 148, 29, 0.25);
+    }
     .custom-result-box {
         background-color: white;
         padding: 1em;
