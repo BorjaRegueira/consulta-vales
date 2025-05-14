@@ -31,26 +31,13 @@ def buscar_vale(df, codigo):
     resultado = df[(df['Zona'] == zona) & (df['Inicio'] <= numero) & (df['Fin'] >= numero)]
     return resultado.iloc[0]['Oficial'] if not resultado.empty else None
 
-# Estilos personalizados
+# Estilos globales
 st.markdown("""
     <style>
     body, .main, .stApp {
         background-color: white;
         color: black;
         font-family: 'Arial', sans-serif;
-    }
-    .custom-container {
-        background-color: white;
-        padding: 3em;
-        border-radius: 25px;
-        max-width: 600px;
-        margin: 4em auto;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        text-align: center;
-    }
-    .custom-container img {
-        max-width: 250px;
-        margin-bottom: 1.5em;
     }
     .stTextInput > div > div > input {
         background-color: white;
@@ -70,21 +57,18 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-with st.container():
-    st.markdown('<div class="custom-container">', unsafe_allow_html=True)
+# Encabezado de la app
+st.image("Logo MANTOTAL Facility.png")
+st.markdown("## Consulta de Vales de Pedido")
+st.markdown("<p>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
-    st.image("Logo MANTOTAL Facility.png")
-    st.markdown("## Consulta de Vales de Pedido")
-    st.markdown("<p>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
+# Campo de entrada y resultado
+df_vales = cargar_datos()
+codigo_vale = st.text_input("Código del Vale:")
 
-    codigo_vale = st.text_input("Código del Vale:")
-    df_vales = cargar_datos()
-
-    if codigo_vale:
-        resultado = buscar_vale(df_vales, codigo_vale)
-        if resultado:
-            st.success(f"El vale {codigo_vale.upper()} está asignado a: <strong>{resultado}</strong>", icon="✅")
-        else:
-            st.error("Este vale no está registrado en la base de datos.")
-
-    st.markdown('</div>', unsafe_allow_html=True)
+if codigo_vale:
+    resultado = buscar_vale(df_vales, codigo_vale)
+    if resultado:
+        st.success(f"El vale {codigo_vale.upper()} está asignado a: <strong>{resultado}</strong>", icon="✅")
+    else:
+        st.error("Este vale no está registrado en la base de datos.")
