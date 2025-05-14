@@ -39,11 +39,16 @@ st.markdown("""
     }
     .custom-container {
         background-color: white;
-        padding: 2em;
+        padding: 3em 2em;
         border-radius: 20px;
         max-width: 600px;
-        margin: 3em auto;
+        margin: 4em auto;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+    .custom-container img {
+        max-width: 300px;
+        margin-bottom: 2em;
     }
     .stTextInput > div > div > input {
         background-color: white;
@@ -66,7 +71,7 @@ st.markdown("""
 with st.container():
     st.markdown('<div class="custom-container">', unsafe_allow_html=True)
 
-    st.image("Logo MANTOTAL Facility.png", use_container_width=True)
+    st.image("Logo MANTOTAL Facility.png")
     st.markdown("## Consulta de Vales de Pedido")
     st.markdown("<p style='margin-bottom: 1em;'>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
