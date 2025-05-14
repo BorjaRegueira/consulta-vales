@@ -45,11 +45,12 @@ st.markdown("""
         color: black;
     }
     .custom-result-box {
-        background-color: black;
+        background-color: white;
         padding: 1em;
+        border: 2px solid black;
         border-radius: 10px;
         margin-top: 1em;
-        color: white;
+        color: black;
         font-size: 1.1em;
     }
     .custom-result-box span {
