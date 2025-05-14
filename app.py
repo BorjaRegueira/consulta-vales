@@ -39,16 +39,28 @@ st.markdown("""
     }
     .custom-container {
         background-color: white;
-        padding: 3em 2em;
-        border-radius: 20px;
+        padding: 3em;
+        border-radius: 25px;
         max-width: 600px;
         margin: 4em auto;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         text-align: center;
+        font-family: 'Arial', sans-serif;
+    }
+    .custom-container h2 {
+        font-size: 1.7em;
+        font-weight: 800;
+        margin-top: 1.5em;
+        color: #222;
+        border-top: 1px solid #ddd;
+        padding-top: 1em;
+    }
+    .custom-container p {
+        color: #444;
     }
     .custom-container img {
-        max-width: 300px;
-        margin-bottom: 2em;
+        max-width: 250px;
+        margin-bottom: 1.5em;
     }
     .stTextInput > div > div > input {
         background-color: white;
@@ -57,13 +69,9 @@ st.markdown("""
     }
     .stAlert.success {
         border: 2px solid green;
-    }
-    button[kind="primary"] {
-        background-color: #d86706 !important;
-        color: white !important;
-        border-radius: 8px;
+        background-color: #f3fff3;
+        color: #1c7c1c;
         font-weight: bold;
-        border: none;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -72,8 +80,8 @@ with st.container():
     st.markdown('<div class="custom-container">', unsafe_allow_html=True)
 
     st.image("Logo MANTOTAL Facility.png")
-    st.markdown("## Consulta de Vales de Pedido")
-    st.markdown("<p style='margin-bottom: 1em;'>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
+    st.markdown("<h2>Consulta de Vales de Pedido</h2>", unsafe_allow_html=True)
+    st.markdown("<p>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
     codigo_vale = st.text_input("Código del Vale:")
     df_vales = cargar_datos()
