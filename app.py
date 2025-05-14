@@ -45,8 +45,8 @@ st.markdown("""
         color: black;
     }
     .stAlert.success {
-        border: 2px solid #f7941d;
-        background-color: #fff9f1;
+        border: 2px solid #ccc;
+        background-color: #f3f3f3;
         color: black;
         font-weight: normal;
     }
@@ -69,6 +69,6 @@ codigo_vale = st.text_input("Código del Vale:")
 if codigo_vale:
     resultado = buscar_vale(df_vales, codigo_vale)
     if resultado:
-        st.success(f"El vale {codigo_vale.upper()} está asignado a: <strong>{resultado}</strong>", icon="✅")
+        st.success(f"El vale {codigo_vale.upper()} está asignado a: <strong>{resultado}</strong>")
     else:
         st.error("Este vale no está registrado en la base de datos.")
