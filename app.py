@@ -35,7 +35,9 @@ def buscar_vale(df, codigo):
 st.markdown("""
     <style>
     body, .main, .stApp {
-        background-color: #ffa53a;
+        background-color: white;
+        color: black;
+        font-family: 'Arial', sans-serif;
     }
     .custom-container {
         background-color: white;
@@ -45,18 +47,6 @@ st.markdown("""
         margin: 4em auto;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         text-align: center;
-        font-family: 'Arial', sans-serif;
-    }
-    .custom-container h2 {
-        font-size: 1.7em;
-        font-weight: 800;
-        margin-top: 1.5em;
-        color: #222;
-        border-top: 1px solid #ddd;
-        padding-top: 1em;
-    }
-    .custom-container p {
-        color: #444;
     }
     .custom-container img {
         max-width: 250px;
@@ -68,9 +58,13 @@ st.markdown("""
         color: black;
     }
     .stAlert.success {
-        border: 2px solid green;
-        background-color: #f3fff3;
-        color: #1c7c1c;
+        border: 2px solid #f7941d;
+        background-color: #fff9f1;
+        color: black;
+        font-weight: normal;
+    }
+    .stAlert.success strong {
+        color: #f7941d;
         font-weight: bold;
     }
     </style>
@@ -80,7 +74,7 @@ with st.container():
     st.markdown('<div class="custom-container">', unsafe_allow_html=True)
 
     st.image("Logo MANTOTAL Facility.png")
-    st.markdown("<h2>Consulta de Vales de Pedido</h2>", unsafe_allow_html=True)
+    st.markdown("## Consulta de Vales de Pedido")
     st.markdown("<p>Introduce el código del vale (ej: GA1200, PV1350, CYL1500)</p>", unsafe_allow_html=True)
 
     codigo_vale = st.text_input("Código del Vale:")
@@ -89,7 +83,7 @@ with st.container():
     if codigo_vale:
         resultado = buscar_vale(df_vales, codigo_vale)
         if resultado:
-            st.success(f"El vale {codigo_vale.upper()} está asignado a: {resultado}")
+            st.success(f"El vale {codigo_vale.upper()} está asignado a: <strong>{resultado}</strong>", icon="✅")
         else:
             st.error("Este vale no está registrado en la base de datos.")
 
