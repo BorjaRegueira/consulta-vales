@@ -6,7 +6,7 @@ import requests
 # URL del archivo Excel en Dropbox
 dropbox_url = "https://www.dropbox.com/scl/fi/1krqq19pflt9enigikm9n/Vales-de-pedido.xlsx?rlkey=qqx033a1jnaenah607oc21ace&raw=1"
 
-@st.cache_data
+@st.cache_data(ttl=0)
 def cargar_datos():
     file = requests.get(dropbox_url).content
     xls = pd.ExcelFile(file)
